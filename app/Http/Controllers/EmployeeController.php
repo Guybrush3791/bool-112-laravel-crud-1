@@ -73,7 +73,9 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $employee = Employee :: find($id);
+
+        return view('pages.edit', compact('employee'));
     }
 
     /**
@@ -85,7 +87,18 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $employee = Employee :: find($id);
+
+        $data = $request -> all();
+
+        $employee -> firstname = $data['firstname'];
+        $employee -> lastname = $data['lastname'];
+        $employee -> fiscal_code = $data['fiscal_code'];
+        $employee -> salary = $data['salary'];
+
+        $employee -> save();
+
+        return redirect() -> route('users.show', $employee -> id);
     }
 
     /**
@@ -96,6 +109,9 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $employee = Employee :: find($id);
+        $employee -> delete();
+
+        return redirect() -> route('users.index');
     }
 }
