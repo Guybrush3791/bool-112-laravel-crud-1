@@ -8,6 +8,15 @@
             {{ $employee -> id }}
         ] EDIT EMPLOYEE
     </h1>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form
         action="{{ route('users.update', $employee -> id) }}"
         method="POST"
@@ -19,6 +28,9 @@
         <label for="firstname">Nome</label>
         <input type="text" name="firstname" id="firstname" value="{{ $employee -> firstname }}">
         <br>
+        @error('firstname')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
         <label for="lastname">Cognome</label>
         <input type="text" name="lastname" id="lastname" value="{{ $employee -> lastname }}">
         <br>

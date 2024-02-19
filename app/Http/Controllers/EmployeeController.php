@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Employee;
+use App\Http\Requests\EmployeeFormRequest;
 
 class EmployeeController extends Controller
 {
@@ -36,7 +37,7 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmployeeFormRequest $request)
     {
         $data = $request -> all();
 
@@ -85,11 +86,17 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EmployeeFormRequest $request, $id)
     {
         $employee = Employee :: find($id);
 
         $data = $request -> all();
+        // $data = $request -> validate(
+        //     $this -> getValidationRules(),
+        //     $this -> getValidationMessages()
+        // );
+
+        // dd($employee, $data);
 
         $employee -> firstname = $data['firstname'];
         $employee -> lastname = $data['lastname'];
@@ -113,5 +120,21 @@ class EmployeeController extends Controller
         $employee -> delete();
 
         return redirect() -> route('users.index');
+    }
+
+    private function getValidationRules() {
+
+        return [
+            'firstname' => 'required|string|min:3|max:255',
+            'lastname' => 'required|string|min:3|max:255',
+            'fiscal_code' => 'required|string|min:10|max:20',
+            'salary' => 'required|numeric',
+        ];
+    }
+    private function getValidationMessages() {
+
+        return [
+            'firstname.min' => "Il nome non puo' essere minore di 3 caratteri"
+        ];
     }
 }
